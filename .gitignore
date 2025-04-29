@@ -1,0 +1,18 @@
+# Ignore all LST folders
+**/LST/
+**/lst/
+**/Lst/
+
+# Specific LST related folders and files
+*LST*.tif
+*lst*.tif
+# __pycache__/
+# *.pyc
+# *.pyo
+# *.pyd
+# *.pyw
+# *.pyz
+
+# Downloaded and temporary data
+downloaded_lst/
+temp_lst/
