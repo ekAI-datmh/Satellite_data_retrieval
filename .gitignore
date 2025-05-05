@@ -16,3 +16,10 @@
 # Downloaded and temporary data
 downloaded_lst/
 temp_lst/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+
