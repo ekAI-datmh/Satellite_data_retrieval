@@ -23,7 +23,7 @@ def lst_retrive(date_start, date_end, geometry, ROI, main_folder):
 
         # Get Landsat collection with added variables.
         LandsatColl = LandsatLST.collection(satellite, date_start, date_end, geometry, use_ndvi)
-        print('Landsat Collection:', LandsatColl.getInfo())
+        # print('Landsat Collection:', LandsatColl.getInfo())
 
         # Convert the collection to a list.
         imageList = LandsatColl.toList(LandsatColl.size())
@@ -40,7 +40,8 @@ def lst_retrive(date_start, date_end, geometry, ROI, main_folder):
             download_params = {
                 'scale': 30,
                 'region': geometry,  # geometry can be passed directly if it is an ee.Geometry
-                'fileFormat': 'ZIP'
+                'fileFormat': 'ZIP',
+                'crs': 'EPSG:4326'
             }
             download_url = image.select('LST').getDownloadURL(download_params)
             print('Downloading image for date:', imageDate)
@@ -89,7 +90,7 @@ def lst_retrive(date_start, date_end, geometry, ROI, main_folder):
                 except Exception as e:
                     print(f"Error removing temporary folder {temp_dir}: {e}")
             print("\n")
-            time.sleep(5)  # Pause briefly between downloads if necessary
+            time.sleep(0.3)  # Pause briefly between downloads if necessary
 
 # Run the function
 # lst_retrive(date_start, date_end, geometry, "AnNinh-QuynhPhu-ThaiBinh", "/mnt/data1tb/LSTRetrieval/Code/download_data")
