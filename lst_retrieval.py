@@ -12,7 +12,7 @@ ee.Initialize(project='ee-hadat')
 from lst_module import Landsat_LST as LandsatLST
 
 
-def lst_retrive(date_start, date_end, geometry, ROI, main_folder):
+def lst_retrive(date_start, date_end, geometry, ROI, main_folder, SKIPPING):
     satellites = ["L8", "L9"]
 
     for satellite in satellites:
@@ -35,6 +35,15 @@ def lst_retrive(date_start, date_end, geometry, ROI, main_folder):
             image = ee.Image(imageList.get(i))
             # Get the image date formatted as YYYY-MM-dd.
             imageDate = ee.Date(image.get('system:time_start')).format('YYYY-MM-dd').getInfo()
+
+            # Check if file already exists
+            dest_folder = os.path.join(main_folder, ROI)
+            dest_folder = os.path.join(dest_folder, "lst")
+            dest_tif = os.path.join(dest_folder, f"lst16days_{imageDate}.tif")
+            
+            if os.path.exists(dest_tif) and SKIPPING:
+                print(f"File already exists for date {imageDate}. Skipping download.")
+                continue
 
             # Get a download URL for the LST band as a ZIP.
             download_params = {
@@ -70,10 +79,7 @@ def lst_retrive(date_start, date_end, geometry, ROI, main_folder):
                         tif_file = tif_files[0]
                         source_tif = os.path.join(temp_dir, tif_file)
                         # Ensure the destination folder exists.
-                        dest_folder = os.path.join(main_folder, ROI)
-                        dest_folder = os.path.join(dest_folder, "lst")
                         os.makedirs(dest_folder, exist_ok=True)
-                        dest_tif = os.path.join(dest_folder, f"lst16days_{imageDate}.tif")
                         shutil.move(source_tif, dest_tif)
                         print(f"Moved extracted TIFF to {dest_tif}")
                     else:

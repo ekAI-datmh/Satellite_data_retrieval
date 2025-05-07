@@ -12,9 +12,9 @@ import ee
 import shutil
 # Initialize Earth Engine
 
-X = 100
-Y = 131
-SKIPPING = False
+X = 40
+Y = 70
+SKIPPING = True
 TARGET_CRS = 'EPSG:4326' # Define target CRS globally
 EXPORT_SCALE = 10 # Define export scale globally
 
@@ -567,7 +567,7 @@ def main():
         # out_folder_lst = os.path.join(export_base, roi_folder, 'lst')
         # os.makedirs(out_folder_lst, exist_ok=True)
         
-        lst_retrive(date_start, date_end,roi_geom, roi_folder, base_dir)
+        lst_retrive(date_start, date_end,roi_geom, roi_folder, base_dir, SKIPPING)
         
         # --- Find LST directory for dates ---
         lst_dir = None
@@ -595,9 +595,9 @@ def main():
         print(f"Total dates to process (original LST + gaps): {len(all_dates)}")
         
         out_folder_era5 = os.path.join(export_base, roi_folder, 'era5')
-        out_folder_modis = os.path.join(export_base, roi_folder, 'modis')
+        # out_folder_modis = os.path.join(export_base, roi_folder, 'modis')
         os.makedirs(out_folder_era5, exist_ok=True)
-        os.makedirs(out_folder_modis, exist_ok=True)
+        # os.makedirs(out_folder_modis, exist_ok=True)
         
         for date in all_dates:
             date_str = date.strftime('%Y-%m-%d')
@@ -610,7 +610,7 @@ def main():
             get_era5_for_date(date, roi_geom, region, out_folder_era5)
             
             # print(f'Fetching MODIS for date: {date_str}')
-            get_modis_for_date(date, roi_geom, region, out_folder_modis)
+            # get_modis_for_date(date, roi_geom, region, out_folder_modis)
         
         # --- Post-processing: Check/Fix CRS ---
         print(f"\nVerifying/Fixing coordinate systems to {TARGET_CRS} for {roi_folder}...")
@@ -622,10 +622,10 @@ def main():
             reproject_if_needed(era5_file, TARGET_CRS)
             
         # Check MODIS files
-        modis_files = glob.glob(os.path.join(out_folder_modis, '*.tif'))
-        print(f"Checking {len(modis_files)} MODIS files...")
-        for modis_file in modis_files:
-            reproject_if_needed(modis_file, TARGET_CRS)
+        # modis_files = glob.glob(os.path.join(out_folder_modis, '*.tif'))
+        # print(f"Checking {len(modis_files)} MODIS files...")
+        # for modis_file in modis_files:
+        #     reproject_if_needed(modis_file, TARGET_CRS)
         
         print(f"===== Finished processing ROI: {roi_folder} =====")
         print("--------------------------------")
